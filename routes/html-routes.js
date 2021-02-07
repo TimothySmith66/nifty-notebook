@@ -1,8 +1,13 @@
-GET /notes - Should return the notes.html file.
+// The path package will be used to construct paths to the html files.
+const path = require("path");
 
-
-GET * - Should return the index.html file.
+const router = require("express").router()
 
 app.get("/notes", (req, res) =>{
-res.sendFile(path.join(__dirname, "view.html"));
+res.sendFile(path.join(__dirname, "notes.html"));
 });
+
+app.get("*", (req, res) =>{
+    res.sendFile(path.join(__dirname, "index.html"));
+    });
+
