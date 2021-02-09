@@ -4,47 +4,43 @@ const fs = require("fs");
 // Creates a re-usable variable to store data in data json file.
 const notesDataPath = path.join(__dirname, "../db/db.json");
 
-
 module.exports = function (app) {
-app.get("/api/notes", (req, res) =>{
-  // read and parse data from file.
-  fs.readFile(notesDataPath, "utf8", (err, data) => {
-    if (err) {
-      console.log(err);
-      // send an error response
-      return res.status(500).end();
-    }
-    // parse json data and send response
-    const noteData = JSON.parse(data);
-    return res.json(noteData);
+  app.get("/api/notes", (req, res) => {
+    // read and parse data from file.
+    fs.readFile(notesDataPath, "utf8", (err, data) => {
+      if (err) {
+        console.log(err);
+        // send an error response
+        return res.status(500).end();
+      }
+      // parse json data and send response
+      const noteData = JSON.parse(data);
+      return res.json(noteData);
+    });
   });
-});
 
-
-
-router.post("/api/notes", (req, res) =>{
-  fs.readFile(notesDataPath, "utf8", (err, data) => {
-    const noteData = JSON.parse(data);
-       noteData.push(req.body);
-      // save note data to file
+  app.post("/api/notes", (req, res) => {
+    fs.readFile(notesDataPath, "utf8", (err, data) => {
+      const noteData = JSON.parse(data);
+      noteData.push(req.body);
+      // save table data to file
       fs.writeFile(notesDataPath, JSON.stringify(noteData), (err) => {
-        // send response
-        return res.json();
+        if (err) {
+          console.log(err);
+          return res.status(500).end();
+        }
+        return res.json(noteData);
       });
+    });
   });
-});
+//   const newCharacter = req.body;
+//   newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
+//   characters.push(newCharacter);
+//   res.json(newCharacter);
+// });
 
-
-router.delete("/api/notes/id", (req, res) => {
-
-});
-
+  router.delete("/api/notes/id", (req, res) => {});
 };
-
-
-
-
-
 
 // * GET `/api/notes` - Should read the `db.json` file and return all saved notes as JSON.
 
