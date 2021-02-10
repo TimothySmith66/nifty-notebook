@@ -3,7 +3,10 @@ const path = require("path");
 const fs = require("fs");
 // Creates a re-usable variable to store data in data json file.
 const notesDataPath = path.join(__dirname, "../db/db.json");
-
+// const notesarray = JSON.parse(notesDataPath);
+// console.log(notesarray)
+x = notesDataPath[6];
+console.log(x)
 module.exports = function (app) {
   app.get("/api/notes", (req, res) => {
     // read and parse data from file.
@@ -34,11 +37,24 @@ module.exports = function (app) {
       });
     });
   });
-  app.delete("/api/notes/id", (req, res) => {
-    fs.unlink(notesDataPath, function (err) {
-      if (err) throw err;
-      console.log('File deleted!');
-    });
+  app.delete("/api/notes/:id", (req, res) => {
+    fs.readFile(notesDataPath, "utf8", (err, data) => {
+      const noteData = JSON.parse(data);
+      const newNotes = [];
+      for (let i = 0; i < noteData.length; i++){
+        if (req.params.id !== noteData[i].id){
+          newNotes.push(noteData[i])
+        }
+      }
+      fs.writeFile(notesDataPath, JSON.stringify(newNotes), (err) => {
+        
+        if (err) {
+          console.log(err);
+          return res.status(500).end();
+        }
+        return res.json(newNotes);
+      });
+    })
   });
 };
 
