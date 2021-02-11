@@ -5,7 +5,7 @@ const fs = require("fs");
 
 // To set up Express App port
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 
 // For: data parsing
